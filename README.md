@@ -2,7 +2,7 @@
 Bot para tibia em shell script
 
 ## Configuração
-O arquivo de configuração se encontra em ~/.config/fitos/rc.conf, seguindo a syntax:
+_O arquivo de configuração se encontra em ~/.config/fitos/rc.conf, seguindo a syntax:_
 ```shell
 inicio_eixoY=600   # O local inicial utilizado para o xte realizar o mousemove no eixo Y
 inicio_eixoX=320   # O local inicial utilizado para o xte realizar o mousemove no eixo X
@@ -15,9 +15,11 @@ spell='F11'        # Hotkey referente a magia (Colocar a magia nela) a ser utili
 food='F12'         # Hotkey para comer o peixe (Colocar o fish)
 tempo_pesca=60     # Tempo em segundos em que o personagem vai pescar até soltar a magia e comer o peixe
 ```
+_Acaso não exista configuração ao executar o script o mesmo sera criado com as configurações padrões._
 
 ## Observações
-_O script utiliza o xte (xdotool, xautomation) para realizar movimento do mouse e teclar, por isso confirme se a KEY a ser utilizada possui no mesmo._
+_O script utiliza o xte (xdotool, xautomation) para realizar movimento do mouse e teclar, por isso confirme se a KEY a ser utilizada possui no mesmo._  
+_**Após ser solicitado para pressionar uma tecla, o mesmo só irá parar através do Ctrl + C.**_
 
 #### Fishing Rod
 ---
