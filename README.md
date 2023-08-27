@@ -18,7 +18,7 @@ tempo_pesca=60     # Tempo em segundos em que o personagem vai pescar até solta
 _Acaso não exista configuração ao executar o script o mesmo sera criado com as configurações padrões._
 
 ## Observações
-_O script utiliza o xte (xdotool, xautomation) para realizar movimento do mouse e teclar, por isso confirme se a KEY a ser utilizada possui no mesmo._  
+_O script utiliza o `xte` (obtém-se ao instalar o `xautomation`) para realizar movimento do mouse e teclar, por isso confirme se a KEY a ser utilizada possui no mesmo._  
 _**Após ser solicitado para pressionar uma tecla, o mesmo só irá parar através do Ctrl + C.**_
 
 #### Fishing Rod
