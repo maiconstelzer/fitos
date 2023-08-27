@@ -150,7 +150,7 @@ do
 	# Incrementando tempo
 	((tempo=tempo+1))
 
-	# Validar se passou 1 minuto
+	# Validar se pode parar de pescar
 	if [ $tempo -gt $tempo_pesca ]; then
 		xte "key $spell" 'sleep 2' "key $spell"
 		xte "key $food" 'sleep 1' "key $food" 'sleep 1' "key $food"
