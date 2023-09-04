@@ -1,21 +1,23 @@
 #!/bin/bash
 
 # Variaveis globais
-inicio_eixoY=600
-inicio_eixoX=320
-fim_eixoY=500
-fim_eixoX=1110
-quadrado=55
-orientacaoX=1
-fishing_rod=''
-spell=''
-food=''
-tempo_pesca=60
+min_x=100
+max_x=300
+
+min_y=100
+max_y=300
+
+segue_x=1
+
+pixels=50
+vara='F1'
+keys=('F2' 'F3' 'F4')
+tempo_key=1
 
 # Funções
 obter_configuracoes() {
 	diretorio=~/.config/fitos
-	config="$diretorio/rc.conf"
+	config="$diretorio/fitos.conf"
 
 	if [ ! -d $diretorio ]; then
 		mkdir $diretorio
@@ -23,23 +25,21 @@ obter_configuracoes() {
 			
 	if [ ! -f $config ]; then
 		touch $config
-		echo 'inicio_eixoY=600' >> $config
-		echo 'inicio_eixoX=320' >> $config
-		echo 'fim_eixoY=500' >> $config
-		echo 'fim_eixoX=1110' >> $config
-		echo "quadrado=55" >> $config
-		echo "orientacaoX=1" >> $config
-		echo "fishing_rod='F10'" >> $config
-		echo "spell='F11'" >> $config
-		echo "food='F12'" >> $config
-		echo 'tempo_pesca=60' >> $config
+		echo "min_x=$min_x" >> $config
+		echo "max_x=$max_x" >> $config
+		echo "min_y=$min_y" >> $config
+		echo "max_y=$max_y" >> $config
+		echo "segue_x=$segue_x" >> $config
+		echo "pixels=$pixels" >> $config
+		echo "vara='$vara'" >> $config
+		echo "keys=('F2' 'F3' 'F4')" >> $config
+		echo "tempo_key=$tempo_key" >> $config
 	fi
 
 	. $config
 
-	if [[ -z "$fishing_rod" || -z "$spell" || -z "$food" ]]; then
-		echo "Problemas com a configuração, favor verificar arquivo ~/.config/fitos/rc.conf"
-		echo 'Acaso precise de um exemplo, favor abrir script fitos.sh com um edito de texto...'
+	if [ -z "$vara" ]; then
+		echo "Problemas com a configuração, favor verificar arquivo ~/.config/fitos/fitos.conf"
 		exit
 	fi	
 }
@@ -54,107 +54,87 @@ echo '█████╗  ██║   ██║   ██║   ██║███
 echo '██╔══╝  ██║   ██║   ██║   ██║╚════██║'
 echo '██║     ██║   ██║   ╚██████╔╝███████║'
 echo '╚═╝     ╚═╝   ╚═╝    ╚═════╝ ╚══════╝'
-echo
-echo '        ║║║░░▄██║║║║░░░▄█░╔╗'
-echo '        ╚╬╝░██▄█╬╬╬╬╬╬███░║║'
-echo '        ░║░░░▀██║║║║░░░▀█░╠╝'
-echo '        ░║░░░░░░░░░░░░░░░░║'     	
+echo '             By ST3LZ3R'
 echo
 
-if [ $orientacaoX -eq 1 ]; then
-	echo "Orientação: X"
-else
-	echo "Orientação: Y"
-fi
-
-echo "Tamanho quadrado: $quadrado"
-echo "Eixo X: $inicio_eixoX - $fim_eixoX"
-echo "Eixo Y: $inicio_eixoY - $fim_eixoY"
-echo "Fishing Rod: $fishing_rod"
-echo "Spell: $spell"
-echo "Food: $food"
+echo "Soma por quadrado: $soma"
+echo "Eixo X: $min_x - $max_x"
+echo "Eixo Y: $min_y - $max_y"
+echo "Vara: $vara"
+echo "Keys: ${keys[@]}"
+echo "Tempo entre keys: $tempo_key"
 echo
 echo 'Pressione uma tecla para continuar...' 
 read
 
-tempo=0
-voltar=0
-x=$inicio_eixoX
-y=$inicio_eixoY
+x=$min_x
+y=$min_y
+
+trata_x() {
+	if [ $min_x -lt $max_x ]; then
+		((x=$x+$pixels))
+		if [ $x -gt $max_x ]; then
+			x=$max_x
+		fi
+	else
+		((x=$x-$pixels))
+		if [ $x -lt $max_x ]; then
+			x=$max_x		
+		fi
+	fi
+}
+
+trata_y() {
+	if [ $min_y -lt $max_y ]; then
+		((y=$y+$pixels))
+		if [ $y -gt $max_y ]; then
+			y=$max_y
+		fi
+	else
+		((y=$y-$pixels))
+		if [ $y -lt $max_y ]; then
+			y=$max_y
+		fi
+	fi
+}
+
+pescar() {
+	xte "mousemove $x $y" "key $vara" 'mouseclick 1' "sleep 1"
+	echo "Pescou em X: $x  Y: $y"		
+}
+
+chamar_keys() {
+	if [[ $x -eq $max_x && $y -eq $max_y ]]; then 
+		for key in ${keys[@]} ;
+		do
+			xte "key $key" "sleep $tempo_key" 
+			echo "Lançou key $key e esperou $tempo_key segundo(s)"  
+		done	
+
+		x=$min_x
+		y=$min_y
+	fi
+
+
+}
 
 while :
 do
-#---------------------------------------------------------------
-#| 				Mouse			       	|
-#---------------------------------------------------------------
-	if [ $orientacaoX -eq 1 ]; then
-		if [ $x -gt $fim_eixoX ]; then
-			x=$fim_eixoX
-		elif [ $y -lt $fim_eixoY ]; then
-			y=$fim_eixoY
-		elif [ $x -lt $inicio_eixoX ]; then
-			x=$inicio_eixoX
-		elif [ $y -gt $inicio_eixoY ]; then
-			y=$inicio_eixoY 
+	if [ $segue_x -eq 1 ]; then
+		trata_x
+		pescar
+		chamar_keys
+		if [ $x -eq $max_x ]; then
+			x=$min_x
+			trata_y
 		fi
-	
 	else
-		if [ $y -gt $fim_eixoY ]; then
-			y=$fim_eixoY
-		elif [ $x -lt $fim_eixoX ]; then
-			x=$fim_eixoX
-		elif [ $y -lt $inicio_eixoY ]; then
-			y=$inicio_eixoY
-		elif [ $x -gt $inicio_eixoX ]; then
-			x=$inicio_eixoX
-		fi		
-	fi
-
-	if [[ $x -eq $fim_eixoX && $y -eq $fim_eixoY ]]; then
-		x=$inicio_eixoX
-		y=$inicio_eixoY
-	fi
-
-	xte "mousemove $x $y" "key $fishing_rod" 'mouseclick 1' 'sleep 1'
-	
-	if [ $orientacaoX -eq 1 ]; then
-		if [[ $x -eq $fim_eixoX && $y -eq $inicio_eixoY ]]; then
-			((y=y - $quadrado))
-			voltar=1
-		elif [[ $x -eq $inicio_eixoX && $voltar -eq 1 && $y -lt $inicio_eixoY ]]; then
-			((y=y - $quadrado))
-			voltar=0
-		elif [ $voltar -eq 1 ]; then
-			((x=x - $quadrado))
-		else
-			((x=x + $quadrado))
-		fi
-
-	else
-		if [[ $y -eq $fim_eixoY && $x -eq $inicio_eixoX ]]; then
-			((x=x - $quadrado))
-			voltar=1
-		elif [[ $y -eq $inicio_eixoY && $voltar -eq 1 && $x -lt $inicio_eixoX ]]; then
-			((x=x - $quadrado))
-			voltar=0
-		elif [ $voltar -eq 1 ]; then
-			((y=y - $quadrado))
-		else
-			((y=y + $quadrado))
+		trata_y
+		pescar
+		chamar_keys
+		if [ $y -eq $max_y ]; then
+			y=$min_y
+			trata_x
 		fi
 	fi
-
-#---------------------------------------------------------------
-#| 				Teclado				|
-#---------------------------------------------------------------
-	# Incrementando tempo
-	((tempo=tempo+1))
-
-	# Validar se pode parar de pescar
-	if [ $tempo -gt $tempo_pesca ]; then
-		xte "key $spell" 'sleep 2' "key $spell"
-		xte "key $food" 'sleep 1' "key $food" 'sleep 1' "key $food"
-		tempo=0
-	fi
-
 done
