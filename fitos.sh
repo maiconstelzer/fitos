@@ -25,15 +25,15 @@ obter_configuracoes() {
 			
 	if [ ! -f $config ]; then
 		touch $config
-		echo "min_x=$min_x" >> $config
-		echo "max_x=$max_x" >> $config
-		echo "min_y=$min_y" >> $config
-		echo "max_y=$max_y" >> $config
-		echo "segue_x=$segue_x" >> $config
-		echo "pixels=$pixels" >> $config
-		echo "vara='$vara'" >> $config
-		echo "keys=('F2' 'F3' 'F4')" >> $config
-		echo "tempo_key=$tempo_key" >> $config
+		echo "min_x=$min_x # Inicio das coordenadas X" >> $config
+		echo "max_x=$max_x # Fim das coordenadas X" >> $config
+		echo "min_y=$min_y # Inicio das coordenadas Y" >> $config
+		echo "max_y=$max_y # Fim das coordenadas Y" >> $config
+		echo "segue_x=$segue_x # Se a orientação deve ser feita com base no eixo X" >> $config
+		echo "pixels=$pixels # Quantidade de pixels a ser somada ou subtraida" >> $config
+		echo "vara='$vara' # Hotkey para uso da vara de pesca" >> $config
+		echo "keys=('F2' 'F3' 'F4') # Hotkeys secundarias que vão ser acionadas a cada fim de pesca (Quando chegar no max_x e max_y)" >> $config
+		echo "tempo_key=$tempo_key # Tempo de espera em segundos para cada hotkey secundária" >> $config
 	fi
 
 	. $config
